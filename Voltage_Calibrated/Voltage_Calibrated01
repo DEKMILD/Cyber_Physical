@@ -1,0 +1,40 @@
+const int pin_c = 36 ;
+const float alpha = 4.7622; // Slope from Excel 
+const float beta = 0.6079; // Offset from Excel 
+const int pin_v = 34;
+//const float calibration_v = 5.45; //ค่าจากการคาริเบรต
+
+void setup() {
+  Serial.begin(115200);
+
+}
+
+void loop() {
+  float adc_current = analogRead(pin_c);
+  float c = ( adc_current * 3.3 ) / 4095 ;
+  float current = ( c - 1.65 ) / 0.185;
+
+  float adc_voltage = analogRead(pin_v);
+  float voltage = (( adc_voltage * 3.3 ) / 4095 );
+  float calibrated_voltage = (alpha*voltage) + beta; // linear calibrated from slope and offset
+  // float real_V = voltage * calibration_v;
+
+    // คำนวณ Power
+  float power = voltage * current;
+
+  Serial.print("ADC_v value : ");
+  Serial.print(adc_voltage , 2 );
+  Serial.print(" | Voltage : ");
+  Serial.print(voltage , 3 );
+  Serial.print(" | ADC_c value : ");
+  Serial.print(adc_current , 2 );
+  Serial.print(" | Current : ");
+  Serial.println(current , 2 );
+
+  // Show Voltage Calibrated
+  Serial.print("Voltage Calibrated : ");
+  Serial.print(calibrated_voltage);
+  Serial.println(" V");
+
+  delay(1000);
+}
